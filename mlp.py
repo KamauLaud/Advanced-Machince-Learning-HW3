@@ -115,7 +115,7 @@ def mlp_objective(model, data, labels, loss_function):
         # math, including our class slides). This computation should be about
         # 1--2 lines of code.
         #######################################################################
-        None # replace this with your code
+        layer_errors[i] = weights[i+1].T.dot(layer_errors[i+1]) * squash_derivatives[i]
 
     # use computed errors to compute gradients for each layer
     for i in range(num_layers):
@@ -126,7 +126,7 @@ def mlp_objective(model, data, labels, loss_function):
         # the layer_errors you previously computed as well as other
         # information. This computation should be about 1--2 lines of code.
         #######################################################################
-        None # replace this with your code
+        layer_gradients[i] = layer_errors[i].dot(activations[i].T)
 
     return objective, layer_gradients
 
