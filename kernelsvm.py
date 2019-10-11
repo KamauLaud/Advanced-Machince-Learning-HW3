@@ -1,5 +1,6 @@
 """Functions for training kernel support vector machines."""
 import numpy as np
+
 from quadprog_wrapper import solve_quadprog
 
 
@@ -92,7 +93,7 @@ def kernel_svm_train(data, labels, params):
     n = gram_matrix.shape[0]
 
     ############################################################################
-    # TODO: insert your code here to set up the inputs to the quadratic
+    # et up the inputs to the quadratic
     # programming solver
     # You must assign a value to the variables:
     # hessian, weights, eq_coeffs, eq_constants, lower_bounds, and upper_bounds
@@ -103,7 +104,15 @@ def kernel_svm_train(data, labels, params):
     #   and         (lower_bounds) <= x <= (upper_bounds)
     ##########################################################################
 
+    hessian = gram_matrix * np.outer(labels, labels.T)
+    weights = np.ones(n)
+    # constraints
+    eq_coeffs = labels
+    eq_constants = np.zeros(1)
 
+    # the bounds of alpha_i
+    lower_bounds = np.zeros(n)
+    upper_bounds = np.ones(n) * params['C']
     ###########################################################################
     # Call quadratic program with provided inputs.
     ############################################################################
@@ -157,11 +166,12 @@ def kernel_svm_predict(data, model):
         gram_matrix = linear_kernel(data, model['support_vectors'])
 
     ########################################################################
-    # TODO: Insert your code below to compute the prediction score given the
+    # Compute the prediction score given the
     # Gram matrix, model.alphas, model.svLabels, and model.bias
     # (You should need no for loops. This can be done in 1--3 lines of code.)
     ########################################################################
-    scores = None # replace this with your code
+    alpha_times_y = model['alphas'] * model['sv_labels']
+    scores = np.sign(alpha_times_y.dot(gram_matrix.T) + model['bias'])
 
     #####################################################################
     # End of score computation
