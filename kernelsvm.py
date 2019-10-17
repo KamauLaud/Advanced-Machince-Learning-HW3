@@ -24,7 +24,8 @@ def polynomial_kernel(row_data, col_data, order):
     #
     # This computation should take around 1--3 lines of code.
     #############################################
-    return None # replace this with your code
+    k = row_data.T.dot(col_data) + 1
+    return np.power(k, order)
 
 
 def rbf_kernel(row_data, col_data, sigma):
@@ -41,14 +42,18 @@ def rbf_kernel(row_data, col_data, sigma):
     :rtype: ndarray
     """
     #############################################
-    # TODO: Insert your code below to implement the RBF kernel. For full
+    # The code below implements the RBF kernel. For full
     # credit, and faster code, you should compute the kernel using matrix
     # operations and have no Python loops.
     #
     # One hint on how to accomplish this is the fact that for vectors x, y
     # (x - y).dot(x - y) = x.dot(x) + y.dot(y) - 2 * x.dot(y)
     #############################################
-    return None # replace this with your code
+    r, c = row_data, col_data
+    multi = -1 / (2 * sigma * sigma)
+    expanded = np.outer(np.diag(r.T.dot(r)), np.ones(c.shape[1]).T) + \
+               np.outer(np.ones(r.shape[1]), np.diag(c.T.dot(c)).T) - 2 * np.dot(r.T, c)
+    return np.exp(multi * expanded)
 
 
 def linear_kernel(row_data, col_data):
